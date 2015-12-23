@@ -29,20 +29,21 @@ If you make a change to a file, you can see how it differs from the last commit 
 $ git diff <filename>
 
 UNDOING MISTAKES
+http://marklodato.github.io/visual-git-guide/index-en.html
 
 A Git HEAD is the last commit made on your current branch. To view this:
 $ git show HEAD
 
-You can revert back to the last commit (HEAD) using. This will undo any changes made to any files since last commit. 
+Unstage files from last commit.
+$ git reset HEAD <file>
+
+Unstage files
+$ git reset SHA <file>
+
+Unstage any staged files after last commit. This will undo any changes made to any files since last commit. 
 $ git checkout HEAD <filename>
 
 It is useful to run a "git diff <file>" to see if you messed up a file. If you did, use "git checkout HEAD <file>" to 
 revert it to the last commit (if you royaly screwed it up beyond repair)
-
-To revert any files to their last commit
-$ git reset HEAD <file>
-
-To revert any files to a arbitrary commit
-$ git reset SHA <file>
 
 BRANCHING
