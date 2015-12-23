@@ -5,10 +5,10 @@ $ git init
 
 Basics Git workflow:
 1) Make changes to files.
-2) Stage changes to "Staging Area"
-3) Commit Changes to repository, thus creating a save point.
+2) Stage changed files to "Staging Area"
+3) Files in the "Staging Area" can be commited. This makes changes to repository, thus creating a save point.
 
-To view status of current repository use:
+To view status of current repository (view changed files, and pending commits):
 $ git status
 
 To stage changed files for commit
@@ -24,4 +24,13 @@ If you make a change to a file, you can see how it differs from the last commit 
 $ git diff <filename>
 
 UNDOING MISTAKES
+
+A Git HEAD is the last commit made on your current branch. To view this:
+$ git show HEAD
+
+You can revert back to the last commit (HEAD) using. This will undo any changes made to any files since last commit. 
+$ git checkout HEAD <filename>
+
+It is useful to run a "git diff <file>" to see if you messed up a file. If you did, use "git checkout HEAD <file>" to 
+revert it to the last commit (if you royaly screwed it up beyond repair)
 
