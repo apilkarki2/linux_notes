@@ -1,0 +1,39 @@
+IP Tables Syntx
+
+Allow HTTP traffic
+
+# iptables --append INPUT --protocol tcp --destination-port 80 --jump ACCEPT
+
+# service iptables save
+
+check the changes took
+# iptables -L -n | less
+
+to delete a particular rule in a chain
+#iptables --delete <Chain> <rule number>
+
+For example, suppose `iptables -L -n` produces the following:
+
+	Chain INPUT (policy ACCEPT)
+	target     prot opt source               destination         
+	ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+	ACCEPT     icmp --  0.0.0.0/0            0.0.0.0/0           
+	ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0           
+	ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:22
+	REJECT     all  --  0.0.0.0/0            0.0.0.0/0            reject-with icmp-host-prohibited
+	ACCEPT     tcp  --  0.0.0.0/0            192.168.1.183        tcp dpt:80
+	ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+
+	Chain FORWARD (policy ACCEPT)
+	target     prot opt source               destination         
+	REJECT     all  --  0.0.0.0/0            0.0.0.0/0            reject-with icmp-host-prohibited
+
+	Chain OUTPUT (policy ACCEPT)
+	target     prot opt source               destination         
+
+and you wish to delete the REJECT rule in the INPUT chain 
+# iptables --delete INPUT 5
+# service iptables save
+
+For security ALWAYS MAKE SURE the last rule in your input chain is to drop all packets. That is, the last iptables command you should run should be
+# iptables --append INPUT --protocol all --jump DROP
