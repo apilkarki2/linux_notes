@@ -1,0 +1,27 @@
+Git Basics
+
+To initialize a git repository
+$ git init
+
+Basics Git workflow:
+1) Make changes to files.
+2) Stage changes to "Staging Area"
+3) Commit Changes to repository, thus creating a save point.
+
+To view status of current repository use:
+$ git status
+
+To stage changed files for commit
+$ git add <filename or glob expression>
+
+To commit changes to repository
+$ git commit -m "Message describing changes"
+
+To see history/log of git commits
+$ git log
+
+If you make a change to a file, you can see how it differs from the last commit with
+$ git diff <filename>
+
+UNDOING MISTAKES
+
