@@ -47,3 +47,14 @@ It is useful to run a "git diff <file>" to see if you messed up a file. If you d
 revert it to the last commit (if you royaly screwed it up beyond repair)
 
 BRANCHING
+
+
+
+
+
+
+
+
+
+References:
+http://stackoverflow.com/questions/2530060/can-you-explain-what-git-reset-does-in-plain-english
