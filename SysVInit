@@ -1,0 +1,9 @@
+SysVInit/Upstart
+
+Ensure a service is started at boot
+$ sudo update-rc.d <service name> defaults
+
+Ensure a service does NOT start at boot
+$ sudo update-rc.d <service name> remove
+
+"-n" flag shows what would happen without.
