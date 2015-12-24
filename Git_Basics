@@ -1,0 +1,60 @@
+Git Basics
+
+Get Help
+$ git help
+$ git help <command>
+$ man git
+
+To initialize a git repository
+$ git init
+
+Basics Git workflow:
+1) Make changes to files.
+2) Stage changed files to "Staging Area"
+3) Files in the "Staging Area" can be commited. This makes permanant changes to repository, thus creating a save point.
+
+To view status of current repository (view changed files, and pending commits):
+$ git status
+
+To stage changed files for commit
+$ git add <filename or glob expression>
+
+To commit changes to repository
+$ git commit -m "Message describing changes"
+
+To see history/log of git commits
+$ git log
+
+If you make a change to a file, you can see how it differs from the last commit with
+$ git diff <filename>
+
+UNDOING MISTAKES
+http://marklodato.github.io/visual-git-guide/index-en.html
+
+A Git HEAD is the last commit made on your current branch. To view this:
+$ git show HEAD
+
+Unstage files from last commit.
+$ git reset HEAD <file>
+
+Unstage files
+$ git reset SHA <file>
+
+Unstage any staged files after last commit. This will undo any changes made to any files since last commit. 
+$ git checkout HEAD <filename>
+
+It is useful to run a "git diff <file>" to see if you messed up a file. If you did, use "git checkout HEAD <file>" to 
+revert it to the last commit (if you royaly screwed it up beyond repair)
+
+BRANCHING
+
+
+
+
+
+
+
+
+
+References:
+http://stackoverflow.com/questions/2530060/can-you-explain-what-git-reset-does-in-plain-english

@@ -1,0 +1,44 @@
+Centos / RHEL 7 Kickstarts
+
+A Kickstart file must be placed in one of the following locations:
+
+    On removable media, such as a DVD or USB flash drive
+    On a hard drive connected to the installation system
+    **On a network share reachable from the installation system** 
+
+Location: /root/anaconda-ks.cfg
+
+Introduction:
+
+
+	Takes the values of installed system. It is a good idea to backup this file up if you plan on making changes to it (or better yet use version control if you plan on make lots of changes).
+
+	KS sections must follow the order:
+	1) Command section
+	2) %packages section
+	3) %pre and %post sections (can be in any order, not required)
+
+	Items within each section do not need to appear in any particular order. %packages, %pre, and %post sections must end with an %end tag.
+
+Verifying your Kickstart file:
+
+To verify your custom kickstart file is syntactically correct and will work, you can use the "ksvalidator" tool
+
+# yum install pykickstart
+# ksvalidator $PATH_TO_KICKSTART_FILE
+
+
+
+
+
+
+
+
+
+
+
+
+
+Terminology:
+
+An installation tree is a copy of the binary Red Hat Enterprise Linux DVD with the same directory structure. 

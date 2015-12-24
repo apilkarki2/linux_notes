@@ -1,0 +1,102 @@
+Pro Puppet:
+
+is ruby based, licensed under GPLv2
+
+Manages hosts throughout their lifecycle:
+  - initial build and installation
+  - upgrades
+  - maintencance
+  - End of life
+  
+Puppet Model:
+  - Deployment
+  - Configuration Language and Resource abstraction layer
+  - Transaction layer
+
+Deployment:
+Puppet agent/client connect to Puppet master/server/daemon using SSL and completes a "Puppet Configuration Run". You can set the puppet agent to connect to the master using Cron. Puppet agents connect to master every 30 minutes by default.
+
+Resource Abstraction Layer:
+Puppet uses Declaritive language for configuring puppet agents (Tell puppet what to do, not how). For example, the following insures vim will be installed regardless of Operating System:
+
+package { "vim":
+    ensure => present,
+}
+
+type { "title":
+	attribute => value,
+}
+
+Each type has a number of "providers" (package type has Yum, Apt, pkgadd, etc..) The provider is determined by "Facter" tool, which contains facts about system (hostname, ip address, OS, version, etc..).
+
+NOTE: If a configuration has not been changed, Puppet will not make a puppet run.
+
+Transaction Layer:
+This is the puppet engine that takes the configuration from RAL and compiles it. It then communicates compiled information to agent. The agent applies these configurations and reports status back to master.
+
+[ master ] -- compile puppet configuration, send to host --> [host]
+[ host ] -- applies configuration on self, reports back to master --> [ master ] 
+
+Puppet is Idempotent, applying the same configuration to a puppet-agent multiple times will not change the agents configuration.
+
+Mixing releases of Puppet:
+Master needs to be newer version than agent. Not recommended as newer versions of puppet use a REST interface (rather than an older XML-RPC transport layer).
+
+Installing on RHEL/CENTOS:
+Prerequisites:
+# yum install ruby ruby-libs ruby-shadow
+
+You will need to add the EPEL (Extra Packages for Enterprise Linux) repository to the hosts. You can do so with the following:
+$ su -c 'rpm -Uvh http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm'
+
+NOTE: For more information on EPEL -> https://fedoraproject.org/wiki/EPEL/FAQ
+
+On the master
+# yum install puppet puppet-server facter
+
+On the agent
+# yum install puppet facter
+
+Configuration:
+  - /etc/puppet/puppet.conf
+  - If the configuration does not exist, you can generate one with the following:
+    # puppetmasterd --genconfig > puppet.conf
+	
+In puppet.conf, place the following under [master] section:
+[master]
+certname=<fully qualified domain name of puppet-master>
+
+The above directive addresses a SSL bug found in ruby. For more information:
+http://projects.puppetlabs.com/projects/puppet/wiki/Ruby_Ssl_2007_006
+
+Add a CNAME to your /etc/hosts file:
+127.0.0.1 localhost
+192.168.0.1 puppet.example.com (or whatever your FQDN is). 
+
+Now would be a good time to brush up on DNS/BIND if you need to.
+
+The site.pp manifest)
+
+Puppet manifests are host configuration files ending in the ".pp" suffix. We need to add /etc/puppet/manifests/site.pp so puppet knows what configurations to load for its clients.
+
+If this file is not present, simply use:
+
+# touch /etc/puppet/manifests/site.pp
+
+Puppet cannot run without this file being present.
+
+Firewall:
+
+Puppet runs on TCP port 8140. Ensure your Netfilter firewall allows puppet access to the master.
+
+-A INPUT -p tcp -m state --state NEW --dport 8140 -j ACCEPT     # access from anywhere
+-A INPUT -p tcp -m state --state NEW --dport 8140 -s 192.168.0.0/24 # access from subnet
+
+Starting the Puppet Daemon:
+On RHEL/CentOS
+
+# systemctl start puppetmaster.service
+# systemctl enable puppetmaster.service
+# systemctl status puppetmaster.service
+
+

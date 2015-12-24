@@ -1,0 +1,23 @@
+SELinux:
+
+Configuration file located at:
+/etc/selinux/config
+
+Has 3 modes of operation:
+
+1) Enforcing
+Denies access and logs events to /var/log/audit.log (Default)
+2) Permissive
+logs events to /var/log/audit.log but does NOT restrict access (useful for troubleshooting)
+3) Disabled
+SELinux is off.
+
+Use the following command to see status of SELinux:
+# sestatus
+
+Use the following to switch between Enforcing and Permissive mode on the fly:
+# setenforce 0 # permissive
+# setenforce 1 # enforcing
+
+NOTE: The above command does not survive reboot. To make the effects persist through reboot, you must edit /etc/selinux/config, and set the "SELINUX=" directive. You should reboot your system for changes to take effect.
+
