@@ -1,1 +1,49 @@
+DNS/BIND
+
+The following assumes Ubuntu
+
+The BIND server is called "named" (as in "name daemon")
+
+Istallation:
+Ubuntu:
+$ sudo apt-get install bind9 dnsutils
+
+There are three ways to configure Bind9.
+1) Caching Nameserver. This will resolve DNS queries and save the results in cache. This will speed up future DNS queries.
+2) Primary Master Server. This type of name server is authoritative for its zone. It also is the final say in all DNS queries.
+3) Secondary Master Server. Gets DNS records from the primary, but is also authoritative. This is neccessary for Redundancy.
+
+Configuration File:
+
+/etc/bind/named.conf
+
+In "/etc/bind/named.conf.options" their is a "directory" directive. DNS looks for files relative to this directory.
+
+CACHING NAMESERVER)
+
+The default behavior for BIND is to act as a cacheing nameserver. Simply change the following lines in "/etc/bind/named.conf.opions"
+
+        // forwarders {
+        //      0.0.0.0;
+        // }
+
+To point to your ISPs DNS servers (I am using OpenDNS servers).
+
+	forwarders {
+		208.67.222.222;
+		208.67.220.220;
+	}
+
+Finally, restart named with 
+$ sudo service bind9 restart
+
+Enable bind9 at startup
+
+
+PRIMARY NAMESERVER)
+
+
+
+SECONDARY NAMESERVER)
+
 
