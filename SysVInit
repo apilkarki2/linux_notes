@@ -1,4 +1,36 @@
-SysVInit/Upstart
+Systemd/SysV Init/Upstart
+
+Init is the very first processes (PID 1) that gets executed in a Linux environment after booting. It is responsible for starting user space, as well as starting any services
+configured to be started on boot (apache, mysql-server, sshd, etc..). Init is essentially the root processes. There are two system/service managers to help configure the behaviour of Init.
+
+Systemd and SysV Init are system/service managers for unix/linux. Systemd is a drop in replacement for SysV Init. I speeds up the boot process considerably using parallizing algorithms. 
+Systemd is the default system/service manager for RHEL/CentOS and other Red Hat like OSs. SysV Init is used on Debian based systems, but can be replaced with Systemd.
+
+You can verify what Init uses for its configuration by running "ps"
+
+Installing Systemd on Ubuntu:
+$ sudo apt-get update && install systemd-services
+
+If systemd is your PID 1, then you have successfully installed systemd.
+
+
+
+
+Using SysV Init on Ubuntu:
+
+To view the location of all the important SysV files
+$ ls /etc/{rc?.d,init.d}
+
+"/etc/init.d" are where all of the scripts are kepts to start and kill processes. "/etc/rc?.d" are directories used for their corresponding runlevel.
+I.E.
+
+rc0.d = Kills processes, Halts/shuts down the system.
+rc1.d = Kills processes, Single user mode. Used for administrative taskes. Many daemons are not started.
+rc2.d = Starts processes, Multi User mode without networking. Does not set up networking interfaces.
+rc3.d = Starts processes, Multi User mode with networking. Starts the system normally.
+rc4.d = Starts processes, Not Defined, for special purposes.
+rc5.d = Starts processes, Start system normally with GUI (runlevel 3 + GUI)
+rc6.d = Kills processes, Reboots the system.
 
 Ensure a service is started at boot
 $ sudo update-rc.d <service name> defaults
@@ -7,3 +39,16 @@ Ensure a service does NOT start at boot
 $ sudo update-rc.d <service name> remove
 
 "-n" flag shows what would happen without.
+
+
+
+
+
+
+
+
+
+
+References:
+
+http://0pointer.net/blog/projects/systemd.html

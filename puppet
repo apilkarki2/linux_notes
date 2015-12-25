@@ -44,6 +44,7 @@ Master needs to be newer version than agent. Not recommended as newer versions o
 
 Installing on RHEL/CENTOS:
 Prerequisites:
+# yum update
 # yum install ruby ruby-libs ruby-shadow
 
 You will need to add the EPEL (Extra Packages for Enterprise Linux) repository to the hosts. You can do so with the following:
@@ -51,11 +52,14 @@ $ su -c 'rpm -Uvh http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-rel
 
 NOTE: For more information on EPEL -> https://fedoraproject.org/wiki/EPEL/FAQ
 
-On the master
+On the master for RHEL
 # yum install puppet puppet-server facter
+For ubuntu/debian
+# apt-get install puppet puppetmaster facter
 
 On the agent
 # yum install puppet facter
+
 
 Configuration:
   - /etc/puppet/puppet.conf
@@ -69,7 +73,8 @@ certname=<fully qualified domain name of puppet-master>
 The above directive addresses a SSL bug found in ruby. For more information:
 http://projects.puppetlabs.com/projects/puppet/wiki/Ruby_Ssl_2007_006
 
-Add a CNAME to your /etc/hosts file:
+Add a CNAME to your "/etc/hosts" file. It is usually a good idea to add the CNAME "puppet" to your puppet master. This is because a puppet agent, when connecting to the master,
+looks for a host named "puppet" in DNS, if the hostname of the master is not explicitly given on the command line.
 127.0.0.1 localhost
 192.168.0.1 puppet.example.com (or whatever your FQDN is). 
 
@@ -94,9 +99,31 @@ Puppet runs on TCP port 8140. Ensure your Netfilter firewall allows puppet acces
 
 Starting the Puppet Daemon:
 On RHEL/CentOS
-
-# systemctl start puppetmaster.service
-# systemctl enable puppetmaster.service
+# systemctl start puppetmaster.servic
+# systemctl enable puppetmaster.service # Ensures puppet starts on boot
 # systemctl status puppetmaster.service
+
+On Ubuntu
+# service puppetmaster start
+# update-rc.d puppetmaster default # Ensures puppet starts on boot
+# service puppetmaster status
+
+On Ubuntu, Puppet keeps other neccessary files in "/var/lib/puppet/". For example, files used for SSL are kept in "/var/lib/puppet/ssl".
+To find where puppet keeps your SSL files, use
+$ grep ssldir /etc/puppet/puppet.conf
+
+Starting Puppet:
+
+Both a puppet agent, as well as a master are started using the same binary command. To start the master from the command line:
+$ puppet master
+
+To start a puppet agent:
+$ puppet agent
+
+It is sometimes useful to not daemonize puppet in order to troubleshoot issues. To start puppetmaster from the command line without making it a daemon:
+$ puppet master --verbose --no-daemonize
+
+See "puppet --help" for more information
+
 
 
