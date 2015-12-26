@@ -2,9 +2,23 @@ DNS/BIND
 
 The following assumes Ubuntu
 
-The BIND server is called "named" (as in "name daemon")
+Two very useful command line tools for looking up DNS resource records are "dig" and "whois". You really should be comfortable with these commands and interpreting their output.
+$ sudo apt-get install dig whois
 
-Istallation:
+The BIND server is called "named" (as in "name daemon"). Also, named is VERY picky about config file syntax. If you mess up the syntax in a configuration file, THE DAEMON WILL NOT START.
+You can troubleshoot this by running:
+$ named-checkconf /etc/bind/named.conf
+
+If you do have a syntax error, this command will print out the file, and line number where the error occurs, for example:
+# named-checkconf /etc/bind/named.conf                                                                                                                                                      
+/etc/bind/named.conf.local:12: expected quoted string near '/'
+
+# vim /etc/bind/named.conf/local
+Then in vim enter ":<line number>" ENTER.
+
+You may need to use "tcpdump" to troubleshoot network issues.
+
+Installation:
 Ubuntu:
 $ sudo apt-get install bind9 dnsutils
 
@@ -21,7 +35,7 @@ In "/etc/bind/named.conf.options" their is a "directory" directive. DNS looks fo
 
 CACHING NAMESERVER)
 
-The default behavior for BIND is to act as a cacheing nameserver. Simply change the following lines in "/etc/bind/named.conf.opions"
+The default behavior for BIND is to act as a caching nameserver. Simply change the following lines in "/etc/bind/named.conf.options"
 
         // forwarders {
         //      0.0.0.0;
@@ -38,12 +52,53 @@ Finally, restart named with
 $ sudo service bind9 restart
 
 Enable bind9 at startup
+(ubuntu)
+$ sudo update-rc.d bind9 default
+(Red Hat)
+$ sudo systemctl enable named
 
+PRIMARY MASTER NAMESERVER)
+To make bind9 a primary nameserver. Assuming your domain is "example.com", add the following to "/etc/bind/named.conf.local"
 
-PRIMARY NAMESERVER)
+    zone "example.com" {
+        type master;
+        file "/etc/bind/db.example.com;
+    };
 
+Copy the existing zone file (/etc/bind/db.local) as a template:
+$ sudo cp /etc/bind/db.local /etc/bind/db.example.com
+
+Edit "/etc/bind/db.example.com" accordingly:
+    ;
+    ; BIND data file for local loopback interface
+    ;
+    $TTL    604800
+    @       IN      SOA     ns.example.com. ubuntu.example.com. (
+                                  3         ; Serial
+                             604800         ; Refresh
+                              86400         ; Retry
+                            2419200         ; Expire
+                             604800 )       ; Negative Cache TTL
+    ;
+    @       IN      NS      ns.example.com
+    @       IN      A       172.17.13.247
+    @       IN      AAAA    fe80::42:acff:fe11:df7
+    
+    ; List other hosts on domain
+    box IN A 172.17.0.1
+
+You can now add records to the bottom of this zone file. Make sure to increment "Serial" every time you make a change to this zone file.
+Finally, restart bind9.
+$ sudo service bind9 restart
 
 
 SECONDARY NAMESERVER)
 
 
+
+
+
+
+resorces:
+
+http://ubuntuforums.org/showthread.php?t=2166260
