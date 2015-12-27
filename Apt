@@ -1,0 +1,80 @@
+Ubuntu Repositories:
+Main - Officially supported software under a free license
+Restricted - Supported software without a free license (proprietary)
+Universe - Community maintained software
+Multiverse - Software that is not free
+
+The list of repositories where software can be obtained are found in the repository configuration files:
+/etc/apt/sources.list
+/etc/apt/sources.list.d
+
+Here is a sample from "/etc/apt/sources.list"
+deb http://archive.ubuntu.com/ubuntu/ trusty main restricted
+deb-src http://archive.ubuntu.com/ubuntu/ trusty main restricted
+
+Repos/archives prefixed by "deb" contain software binaries (already compiled software). Those prefixed by "deb-src" contain source code. It is sometimes desirable to download source code
+as this allows you to get the cutting edge newest version of a package right from the devoloper. It also allows you to read the source code and make any changes before you compile it to binary data.
+
+If you are going to edit /etc/apt/sources.list, make sure you back it up:
+# cp /etc/apt/sources.list /etc/apt/sources.list.backup
+
+Whenever you edit these files, make sure to run "apt-get update" afterwards to update the APT database with the newest available packages.
+
+Always use the following command to get the latest packages:
+$ sudo apt-get update && sudo apt-get install {package-name}
+
+To remove a package as well as packages that depend on it (but keep its config files):
+$ sudo apt-get remove {package-name}
+
+To remove the configuration files as well:
+$ sudo apt-get purge {package-name}
+
+To upgrade all packages to their newest possible version (for security patches, added features, etc..:
+$ sudo apt-get update
+$ sudo apt-get -u upgrade
+
+
+Searching for packages:
+$ apt-cache search {regular-expression}
+
+For more details about a particular package:
+$ apt-cache show {package-name}
+
+To show other packages a package depends upon:
+$ apt-cache depends {package-name}
+
+To find all files a package has installed:
+$ dpkg -L {package name}
+
+For example, if you needed to find where a package placed its database files, you could do the following:
+# dpkg -L bind9 | grep db
+/etc/bind/db.0
+/etc/bind/db.255
+/etc/bind/db.empty
+/etc/bind/db.127
+/etc/bind/db.root
+/etc/bind/db.local
+
+
+To add a repository to "/etc/apt/sources.list" you can simply edit it manually:
+
+
+To download source code from a "deb-src" repo:
+$ sudo apt-get source {packagename}
+
+To have APT auto build a package:
+$ sudo apt-get source -b {package-name}
+
+And to have dpkg install the freshly built and compiled package:
+$ sudo dpkg -i {package}.deb
+
+Common Errors:
+If you receive the error "E: Dynamic MMap ran out of room" when running apt-get update, add the following line to /etc/apt/apt.conf:
+
+     APT::Cache-Limit 10000000;
+     
+
+References:
+
+http://www.debian.org/doc/manuals/apt-howto/index.en.html
+http://www.debian.org/doc/manuals/apt-howto/index.en.html#contents

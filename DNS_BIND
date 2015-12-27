@@ -81,7 +81,7 @@ Edit "/etc/bind/db.example.com" accordingly:
                              604800 )       ; Negative Cache TTL
     ;
     @       IN      NS      ns.example.com
-    @       IN      A       172.17.13.247
+    @       IN      A       172.17.13.247 ; ip of hostname "ns"
     @       IN      AAAA    fe80::42:acff:fe11:df7
     
     ; List other hosts on domain
@@ -98,7 +98,44 @@ SECONDARY NAMESERVER)
 
 
 
+1) Installation
+# sudo apt-get update && apt-get install bind9 dnsutils
+
+dnsutils contains dns specific packages (like "dig") which will be useful for troubleshooting.
+
+2) Creating a DNS Zone File
+This file tells bind/named what hostnames it will be responsible for resolving.
+# cd /etc/bind
+# mkdir -p /etc/bind/zones/master 
+# cd zones/master/
+
+We need to create two zone database files. One for converting a hostname to IP (Name resolotion), and another for converting IP to a hostname (reverse name resolution).
+We will copy "/etc/bind/db.local" as a template. I am using the domain "example.com" on the 192.168.0 subnet.
+# cp /etc/bind/db.local /etc/bind/zones/master/db.example.com
+# cp /etc/bind/db.local /etc/bind/zones/master/db.192.168.0
+
+Make the following changes to "db.example.com"
+
+
+;
+; BIND data file for example.com
+;
+$TTL    604800
+@       IN      SOA     ns1.example.com. admin.example.com. (
+                              2         ; Serial, increment this after every change to this zone file
+                              3h        ; Refresh every three hours.  Time a secondary name server waits between zone transfers
+                              1h        ; Retry after one hour. Time a secondary name server waits after a failed zone transfer before it tries again
+                              1w        ; Expire after one week. Time a secondary name server will keep trying to complete a zone transfer. After the zone transfer expires, the Secondary Name Server is no longer authoratative for that zone. 
+                              1h )       ; Negative Cache TTL
+;
+@       IN      NS      ns1.example.com
+@       IN      A       192.168.0.10
+@       IN      AAAA    ::1
+
+All values above are in seconds unless otherwise specified. 
 
 resorces:
 
 http://ubuntuforums.org/showthread.php?t=2166260
+http://linuxconfig.org/linux-dns-server-bind-configuration
+https://support.microsoft.com/en-us/kb/163971
