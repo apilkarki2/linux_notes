@@ -55,6 +55,18 @@ For example, if you needed to find where a package placed its database files, yo
 /etc/bind/db.root
 /etc/bind/db.local
 
+To see ALL installed packages:
+$ dpkg -l
+
+This is useful for finding if a particular package is installed, for example to see if Apache HTTPD is installed:
+$ dpkg -l | grep apache
+ii  apache2                                                     2.4.7-1ubuntu4.8                      amd64        Apache HTTP Server
+ii  apache2-bin                                                 2.4.7-1ubuntu4.8                      amd64        Apache HTTP Server (binary files and modules)
+ii  apache2-data                                                2.4.7-1ubuntu4.8                      all          Apache HTTP Server (common files)
+ii  apache2-doc                                                 2.4.7-1ubuntu4.8                      all          Apache HTTP Server (on-site documentation)
+ii  libapache-pom-java                                          10-2build1                            all          Maven metadata for all Apache Software projects
+ii  libapache2-mod-php5                                         5.5.9+dfsg-1ubuntu4.14                amd64        server-side, HTML-embedded scripting language (Apache 2 module)
+ii  libbatik-java                                               1.7.ubuntu-8ubuntu2.14.04.1           all          xml.apache.org SVG Library
 
 To add a repository to "/etc/apt/sources.list" you can simply edit it manually:
 

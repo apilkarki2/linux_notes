@@ -1,6 +1,10 @@
-In general, you should always use your package manager when installing software.
+In general, you should always use your package manager when installing software. This is because any software installed as a tar archive or someting similar, will leave your package manager
+unaware of the software in its database. This may mess up dependancy resolutions later.
 
+Never install a patch in a production environment before testing.
 
+when upgrading the kernel, always have the old kernel version available during testing in case of something bad happens. After a kernel upgrade, check the 
+log files that get written to during the boot process to make sure everything is started appropriately.
 
 References:
 
