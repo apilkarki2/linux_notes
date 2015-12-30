@@ -2,6 +2,13 @@ DNS/BIND
 
 The following assumes Ubuntu
 
+To change the FQDN of a linux host, edit the following 2 files:
+vi /etc/hostname
+$HOSTNAME
+
+vi /etc/hosts 
+$IP $FQDN $HOSTNAME
+
 Two very useful command line tools for looking up DNS resource records are "dig" and "whois". You really should be comfortable with these commands and interpreting their output.
 $ sudo apt-get install dig whois
 
