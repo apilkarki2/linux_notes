@@ -9,6 +9,13 @@ $HOSTNAME
 vi /etc/hosts 
 $IP $FQDN $HOSTNAME
 
+Then, restart network services (just in case)
+$ /etc/init.d/network restart
+
+The next shell you open will display the new hostname. To display the new hostname in the current Bash shell,
+simply reload bash with the following command:
+$ bash
+
 Two very useful command line tools for looking up DNS resource records are "dig" and "whois". You really should be comfortable with these commands and interpreting their output.
 $ sudo apt-get install dig whois
 
