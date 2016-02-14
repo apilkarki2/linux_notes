@@ -12,14 +12,14 @@ Here is a sample from "/etc/apt/sources.list"
 deb http://archive.ubuntu.com/ubuntu/ trusty main restricted
 deb-src http://archive.ubuntu.com/ubuntu/ trusty main restricted
 
-Repos/archives prefixed by "deb" contain software binaries (already compiled software). Those prefixed by "deb-src" contain source code. It is sometimes desirable to download source code
-as this allows you to get the cutting edge newest version of a package right from the devoloper. It also allows you to read the source code and make any changes before you compile it to binary data.
+Repos/archives prefixed by "deb" contain software binaries (already compiled software). Those prefixed by "deb-src" contain source code. It is sometimes desirable to download source code as this allows you to get the cutting edge newest version of a package right from the devoloper. It also allows you to read the source code and make any changes before you compile it to binary data.
 
-If you are going to edit /etc/apt/sources.list, make sure you back it up:
-# cp /etc/apt/sources.list /etc/apt/sources.list.backup
+If you are going to edit /etc/apt/sources.list, make sure you back it up first:
+# cp /etc/apt/sources.list /etc/apt/sources.list.original
 
 Whenever you edit these files, make sure to run "apt-get update" afterwards to update the APT database with the newest available packages.
 
+APT does not refresh repository information prior to installations. Because of this, always prefix an install command with an update command.
 Always use the following command to get the latest packages:
 $ sudo apt-get update && sudo apt-get install {package-name}
 
@@ -29,16 +29,19 @@ $ sudo apt-get remove {package-name}
 To remove the configuration files as well:
 $ sudo apt-get purge {package-name}
 
-To upgrade all packages to their newest possible version (for security patches, added features, etc..:
+To upgrade all packages to their newest possible version (for security patches, added features, etc..):
 $ sudo apt-get update
 $ sudo apt-get -u upgrade
 
 
-Searching for packages:
+SEARCHING FOR PACKAGES / PACKAGE INFORMATION:
 $ apt-cache search {regular-expression}
 
-For more details about a particular package:
+For more details about a particular package (including how to report bugs):
 $ apt-cache show {package-name}
+
+For more details on dependencies and reverse dependencies (what depends on this package):
+$ apt-cache showpkg {package-name}
 
 To show other packages a package depends upon:
 $ apt-cache depends {package-name}
@@ -68,17 +71,21 @@ ii  libapache-pom-java                                          10-2build1      
 ii  libapache2-mod-php5                                         5.5.9+dfsg-1ubuntu4.14                amd64        server-side, HTML-embedded scripting language (Apache 2 module)
 ii  libbatik-java                                               1.7.ubuntu-8ubuntu2.14.04.1           all          xml.apache.org SVG Library
 
-To add a repository to "/etc/apt/sources.list" you can simply edit it manually:
 
+THE APT/UBUNTU REPOSITORIES
+To add a repository to "/etc/apt/sources.list" you can simply edit it manually:
 
 To download source code from a "deb-src" repo:
 $ sudo apt-get source {packagename}
 
-To have APT auto build a package:
+To have APT auto build/compile a source package:
 $ sudo apt-get source -b {package-name}
 
 And to have dpkg install the freshly built and compiled package:
 $ sudo dpkg -i {package}.deb
+
+To view the contents of a .deb archive
+# dpkg-deb -c foo.deb
 
 Common Errors:
 If you receive the error "E: Dynamic MMap ran out of room" when running apt-get update, add the following line to /etc/apt/apt.conf:
