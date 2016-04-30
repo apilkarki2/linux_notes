@@ -1,5 +1,39 @@
-IP Tables Syntx
+IP Tables Overview
 
+0) Make sure iptables is running and that it is not masked, and that it starts on boot.
+# systemctl is-enabled iptables
+# systemctl start iptables
+# systemctl enable iptables
+
+1) Listing rules
+# iptables --list
+
+To view rules for a specific chain (I.E. the INPUT Chain)
+# iptables --list INPUT
+
+List rules, but do not resolve host names or ports (use IPs and numbers)
+# iptables --list INPUT -n
+
+Show Rule Numbers in the input chain.
+# iptables --list INPUT --line-numbers
+
+2) Modifying rules
+Insert a rule
+# iptables --insert <chain> <rule_number> --prot tcp --source <source_ip> --dport 80 --jump DROP
+
+Delete a particular rule in a chain
+# iptables --list INPUT --line-numbers
+# iptables --delete INPUT <rule_number>
+
+3) Saving Changes
+On Debian based systems
+# service iptables save
+
+On Red Hat like systems
+# iptables-save
+
+
+2) Inserting rules
 Allow HTTP traffic
 
 # iptables --append INPUT --protocol tcp --destination-port 80 --jump ACCEPT
@@ -33,7 +67,6 @@ For example, suppose `iptables -L -n` produces the following:
 
 and you wish to delete the REJECT rule in the INPUT chain 
 # iptables --delete INPUT 5
-# service iptables save
 
 For security ALWAYS MAKE SURE the last rule in your input chain is to drop all packets. That is, the last iptables command you should run should be
 # iptables --append INPUT --protocol all --jump DROP
