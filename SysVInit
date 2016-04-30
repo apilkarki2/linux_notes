@@ -41,6 +41,34 @@ $ sudo update-rc.d <service name> remove
 "-n" flag shows what would happen without.
 
 
+Basic Systemd commands (Red Hat like systems)
+How do I start/stop or enable/disable services?
+
+Activates a service immediately:
+# systemctl start foo 
+
+Deactivates a service immediately:
+# systemctl stop foo 
+
+Restarts a service:
+# systemctl restart foo 
+
+Shows status of a service including whether it is running or not:
+# systemctl status foo 
+
+Enables a service to be started on bootup:
+# systemctl enable foo 
+
+Disables a service to not start during bootup:
+# systemctl disable foo 
+
+Prevent a service from starting dynamically or even manually unless unmasked:
+# systemctl mask foo 
+
+Check whether a service is already enabled or not:
+# systemctl is-enabled foo
+
+Refer to man systemctl for more details. 
 
 
 
