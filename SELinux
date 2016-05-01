@@ -1,4 +1,9 @@
-SELinux:
+SELinux Basics:
+
+There are a few ways to keep a process from gaining root privileges.
+1) Don't assign processes the root user
+2) The process may have a chroot environment
+3) Use SELinux (Mandatory Access Control)
 
 Configuration file located at:
 /etc/selinux/semanage.conf
@@ -23,3 +28,17 @@ enforcing
 
 NOTE: The above command does not survive reboot. To make the effects persist through reboot, you must edit /etc/selinux/config, and set the "SELINUX=" directive. You should reboot your system for changes to take effect.
 
+Using SELinux
+To see the SELinux context for a file:
+$ ls -Z <file>
+
+To see SELinux context for a running process
+$ ps -eZ | grep sshd
+
+
+
+
+
+
+Resources:
+https://wiki.gentoo.org/wiki/SELinux/Tutorials
