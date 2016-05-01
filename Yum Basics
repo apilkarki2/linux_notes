@@ -4,3 +4,6 @@ $ sudo yum install <package>
 To see if a package is already installed
 $ yum list installed <package>
 $ yum list installed yum
+
+To see list of enabled repos
+$ yum repolist
