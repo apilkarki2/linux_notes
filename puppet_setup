@@ -144,3 +144,8 @@ $ puppet config print | less
 $ puppet config print ssldir
 
 2) SELinux 
+
+
+
+Resources)
+https://www.digitalocean.com/community/tutorials/how-to-install-puppet-to-manage-your-server-infrastructure#InstallPuppetAgent
