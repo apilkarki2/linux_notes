@@ -121,7 +121,11 @@ $ puppet master --verbose --no-daemonize
 
 See "puppet --help" for more information
 
+To see all certificate requests from agents waiting to be signed by the master:
+$ puppet cert --list
 
+To sign these pending requests:
+$ puppet cert --sign <request>
 
 TROUBLESHOOTING:
 1) `systemctl status puppet` produces:
