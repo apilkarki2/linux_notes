@@ -76,19 +76,15 @@ http://projects.puppetlabs.com/projects/puppet/wiki/Ruby_Ssl_2007_006
 Add a CNAME to your "/etc/hosts" file. It is usually a good idea to add the CNAME "puppet" to your puppet master. This is because a puppet agent, when connecting to the master,
 looks for a host named "puppet" in DNS, if the hostname of the master is not explicitly given on the command line.
 127.0.0.1 localhost
-192.168.0.1 puppet.example.com (or whatever your FQDN is). 
+<Host's IP> <Host's FQDN> puppet. 
 
 Now would be a good time to brush up on DNS/BIND if you need to.
 
 The site.pp manifest)
-
 Puppet manifests are host configuration files ending in the ".pp" suffix. We need to add /etc/puppet/manifests/site.pp so puppet knows what configurations to load for its clients.
-
-If this file is not present, simply use:
+If this file is not present (Puppet cannot run without this file being present), simply use:
 
 # touch /etc/puppet/manifests/site.pp
-
-Puppet cannot run without this file being present.
 
 Firewall:
 
@@ -127,3 +123,20 @@ See "puppet --help" for more information
 
 
 
+TROUBLESHOOTING:
+1) `systemctl status puppet` produces:
+Could not request certificate: Connection refused - connect(2)
+
+Verify that the puppet master is started (before the agent preferrably). 
+$ systemctl start puppetmaster
+
+The first time puppetmaster is started, it signs the following certs:
+  - Signed certificate request for ca (So puppetmaster can act as CA for puppet agents)
+  - The CA puppet master then signs any puppet agents you may have started waiting for a Puppet SSL Cert Request
+  
+
+Verify the SSL dir is where you think it is (print list of puppet environment variables):
+$ puppet config print | less
+$ puppet config print ssldir
+
+2) SELinux 
