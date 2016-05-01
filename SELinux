@@ -31,6 +31,8 @@ NOTE: The above command does not survive reboot. To make the effects persist thr
 Using SELinux
 To see the SELinux context for a file:
 $ ls -Z <file>
+OR
+$ stat <file>
 
 To see SELinux context for a running process
 $ ps -eZ | grep sshd
