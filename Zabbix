@@ -1,0 +1,102 @@
+The following assumes ubuntu 14.04.3 using an apache name based virtual host (Cloud 9 in this case for some reason).
+
+INSTALLATION)
+# wget http://repo.zabbix.com/zabbix/2.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_2.4-1+trusty_all.deb
+# dpkg -i zabbix-release_2.4-1+trusty_all.deb
+# apt-get update
+
+On the server
+# apt-get install zabbix-server-mysql zabbix-frontend-php
+
+On any agents
+# apt-get install zabbix-agent
+
+CONFIGURATION FILES)
+To find the configuration files on your Debian based system, use:
+$ dpkg -l | grep zabbix | awk '{print $2}' | xargs dpkg -L | grep "\.conf"
+
+Zabbix server config file:
+/usr/share/zabbix-server-mysql/zabbix_server.conf
+
+Zabbix agent config file:
+/usr/share/doc/zabbix-agent/examples/zabbix_agent.conf
+
+Zabbix agentd config file:
+/usr/share/zabbix-agent/zabbix_agentd.conf
+
+Zabbix php coniguration file:
+/usr/share/zabbix/conf/zabbix.conf.php
+
+Zabbix Apache HTTP config file:
+/etc/zabbix/apache.conf
+
+INITIAL CONFIGURATION)
+Edit apache .conf configuration file at /etc/zabbix/apache.conf, ensure
+
+    <IfModule mod_php5.c>
+        php_value max_execution_time 300
+        php_value memory_limit 128M
+        php_value post_max_size 16M
+        php_value upload_max_filesize 2M
+        php_value max_input_time 300
+        php_value date.timezone America/New_York
+    </IfModule>
+    
+Alternatively, find your timezone at http://php.net/manual/en/timezones.america.php. Similarly, edit the corresponding php.init file located at /etc/php5/apache2/php.init
+
+Restart Apache
+$ sudo /etc/init.d/apache2 restart
+
+If you are running on Cloud 9, you will need to create a name based virtual host.
+$ touch /etc/apache2/sites-available/002-zabbix.conf
+$ ln -s /etc/apache2/sites-available/002-zabbix.conf /etc/apache2/sites-enabled/002-zabbix.conf
+
+Add the following to the sites-available.conf
+
+<VirtualHost *:8080>
+    DocumentRoot /usr/share/zabbix
+    ServerName https://zabbix.{C9_HOSTNAME}:443
+
+    LogLevel info
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    
+    <Directory /usr/share/zabbix>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+ServerName https://zabbix.${C9_HOSTNAME}
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
+Restart apache, Create the database, import the schema and information. Database stores configuration data, as well as polling data.
+
+$ cd /usr/share/doc/zabbix-server-mysql-2.4.0/
+$ mysql -u root -p
+mysql> create database zabbix character set utf8 collate utf8_bin;
+mysql> grant all privileges on zabbix.* to zabbix@localhost identified by '<password>'
+mysql> quit;
+$ mysql -u zabbix -p <password> zabbix < schema.sql
+# Stop here if you are creating database for zabbix proxy
+$ mysql -u zabbix -p <password> zabbix < images.sql
+$ mysql -u zabbix -p <password> zabbix < data.sql
+
+Log into the web interface (usually http://localhost/zabbix.com:80)
+Follow the prompts to finish the installation.
+
+Log in with superuser credentials
+user: Admin
+pass: zabbix
+
+INITIAL TROUBLE SHOOTING STEPS)
+
+If you get error message "Zabbix Server is not running"
+1) Check that the port the zabbix-server is running on is the same as what is listed in /etc/zabbix/web/zabbix.conf.php.
+
+2) Check all services are running
+
+If Zabbix cannot connect to the database
+3) Restart zabbix-server, then tail /var/log/zabbix/zabbix_server.log to see which configuration file zabbix is using. Make sure this is the proper configuration file.
